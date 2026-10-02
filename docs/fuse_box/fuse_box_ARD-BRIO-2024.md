@@ -1,0 +1,14 @@
+---
+doc_id: fuse_box_ARD-BRIO-2024
+doc_type: fuse_box
+make: Arden
+model: Brio
+year: 2024
+---
+
+# Fuse box: Arden Brio 2024
+
+Fuse box locations: Cabin: lower left of dashboard; Engine bay: front right.
+A fuse diagram is printed on each fuse box cover. Replace a blown fuse only with one of the same amperage.
+For a headlight that is out, check the headlight bulb and its fuse first.
+Headlight bulb part number: BLB-H11.
