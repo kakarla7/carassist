@@ -1,84 +1,57 @@
-# CarAssist
+# CarAssist data
 
-A RAG assistant for a dealer parts-and-service desk. A customer or service advisor describes a car problem or asks a how-to question, and CarAssist explains the likely cause, the relevant procedure, and the part that fits that exact make, model, and year, with citations.
+All makes, models, specs, and part numbers are **fictional**. These tables are the ground truth: text documents are generated from them, and eval answers come from them.
 
-> All makes, models, specs, and part numbers in this repo are **fictional**. This is a learning project, not real automotive guidance.
+## Files
 
-**Live demo:** [link, add after deploy]
+| File | Rows | What it is |
+|---|---|---|
+| `models.csv` | 12 | One row per make, model, and year. IDs look like `NOR-TERN-2024`. |
+| `parts_catalog.csv` | 31 | One row per part: number, name, category, position, price, stock. |
+| `fitment.csv` | 109 | Which part fits which `model_id`, one row per fit. |
+| `symptoms.csv` | 11 | Plain-language symptoms with ranked likely causes, quick checks, parts involved, safety flag. |
 
-## Use case
+## Lineup
 
-- **Users:** service advisors and customers at a dealer service desk.
-- **Questions it handles:** procedures (changing a tire, jump-starting), warning lights, symptoms ("grinding when I brake"), maintenance, and "which part do I need?"
-- **Knowledge sources:** manual sections, troubleshooting articles, service bulletins, past service tickets, advisor-customer conversations, FAQs.
+- **Arden:** Aria, Brio, Cora
+- **Norvik:** Sable, Tern, Vale
+- Years: 2024 and 2025
 
-## Goal
+## Column notes
 
-Give accurate, cited answers for a specific make, model, and year. When the answer isn't in the data, say so or ask a clarifying question instead of guessing.
+- `models.csv`: units are psi, ft-lb, liters, and miles. `quirk` is blank when a model has no special note.
+- `parts_catalog.csv`: `price_usd` and `stock` are not used in this build (reserved for a later structured lookup tool).
+- `fitment.csv`: every `part_number` and `model_id` exists in the other tables (checked).
+- `symptoms.csv`: `safety_flag` is high, medium, or low. `applies_to` is `All` or a list of `model_id`s.
 
-## Success criteria
+## Planted traps (the answer key for evals)
 
-| Area | Target |
-|---|---|
-| Retrieval | The correct source chunk is in the top 3 for [X]% of test questions |
-| Grounding | Answers use only retrieved content, with a correct citation |
-| Fitment | The part number returned fits the stated make, model, and year |
-| No invention | Never produces a part number that isn't in the data |
-| Honesty | Says "not found" on unanswerable questions; asks which model when none is given |
-| Safety | Brake and steering symptoms always carry a safety warning |
+**Near-duplicate models**
+- Norvik Tern and Vale are identical except lug nut torque (Tern 85 ft-lb, Vale 88 ft-lb).
+- Their front brake pads differ by one digit: Tern `BP-4417`, Vale `BP-4418`.
+- Their left mirror glass differs by one digit: Tern `MR-8801`, Vale `MR-8802`.
 
-## Scope
+**Year differences on the same model**
+- Arden Aria: 2024 uses a Group 35 flooded battery (`BAT-35`); 2025 uses a Group 48 AGM (`BAT-48A`).
+- Arden Brio: 2024 has a spare tire; 2025 has no spare, only an inflator kit.
+- Arden Cora: lug torque is 80 ft-lb in 2024 and 90 ft-lb in 2025. Engine air filter is `AF-6410` for 2024 and `AF-6411` for 2025.
 
-**In scope (this build):** document RAG with citations, symptom-to-likely-cause reasoning grounded in the documents, part identification from the catalog.
+**Parts that fit only some years**
+- `BM-1500` (front bumper cover) fits the 2024 Aria only.
+- `AF-6410` fits the 2024 Cora only; `AF-6411` fits the 2025 Cora only.
 
-**Out of scope for now:** pricing, stock, and placing orders; real manufacturer data.
+**Parts that fit many models**
+- `BP-5502` (rear pads) fits all six Norvik model-years; `BP-3301` (front pads) fits Aria and Brio, both years.
 
-## How it works
+**Model-specific quirks**
+- Arden Cora: battery is under the rear seat; rattling there points to a loose hold-down clamp (`BAT-HD-47`).
+- Norvik Sable: cabin filter is behind the glovebox and needs a trim removal tool; its service interval is 12,000 miles (others 15,000).
 
-1. **Ingest:** generated text documents with metadata (make, model, year, doc type).
-2. **Chunk:** by document structure, keeping metadata on every chunk.
-3. **Embed and store:** [embedding model] into [Chroma].
-4. **Retrieve:** top-k with metadata filtering by make, model, and year.
-5. **Generate:** Claude answers from retrieved context only, with citations.
+**Not-found cases**
+- `SPK-9999` (spark plug set) is in the catalog but fits no model in `fitment.csv`.
+- No model outside the 12 rows exists, so any other make or model is unanswerable.
 
-The parts catalog stays a structured table, because part numbers and fitment need exact lookups, not fuzzy search.
-
-## Data
-
-- `data/` holds the source-of-truth tables (CSV): models, parts catalog, symptoms.
-- `docs/` holds text documents generated from those tables and spot-checked against them.
-- [N] make-model-year combinations, [N] document types.
-- Evaluation questions and expected answers come from the tables.
-
-## Repo structure
-
-```
-carassist/
-  data/        # CSV tables (ground truth)
-  docs/        # generated text documents
-  src/         # pipeline code
-  evals/       # test questions and results
-  app/         # Streamlit app
-  README.md
-```
-
-## Evaluation
-
-Test set of [N] questions, including direct lookups, wrong-model traps, fitment traps, vague symptoms, unanswerable questions, and safety cases. Results: [add after first run].
-
-## Known limitations
-
-[Fill in as you find them: retrieval misses, near-duplicate confusion, etc.]
-
-## Roadmap
-
-- [ ] Plain-Python RAG pipeline and eval harness
-- [ ] Hybrid search, reranking, query rewriting
-- [ ] Embedding model comparison
-- [ ] Rebuild with LangChain and compare
-- [ ] LangGraph agent combining RAG with parts-catalog lookup
-- [ ] Expose the knowledge base through an MCP server
-
-## Setup
-
-[Add after the code exists: Python version, install steps, how to run locally. Never commit API keys; use environment variables or Streamlit secrets.]
+**Safety and ambiguity**
+- `SYM-01` (grinding when braking) and `SYM-03` (steering wheel shakes) are high safety: answers must carry a warning.
+- `SYM-11` ("car is making a noise") is deliberately vague: the right behavior is to ask follow-up questions.
+- A question with no make, model, or year should trigger a clarifying question, not a guess.
