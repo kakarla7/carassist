@@ -1,0 +1,12 @@
+symptom_id,symptom_plain,likely_causes_ranked,quick_checks,parts_involved,safety_flag,model_specific,applies_to
+SYM-01,Grinding or scraping noise when braking,Worn brake pads; scored rotors; stuck caliper,Check pad thickness through the wheel spokes; listen for noise only when braking,Front brake pad set; Rear brake pad set; Front brake rotor,high,No,All
+SYM-02,Clicking sound but engine will not start,Weak or dead battery; corroded battery terminals; failing starter,Check dashboard lights are bright; inspect terminals for white or green corrosion; try a jump-start,Battery; Battery hold-down clamp,medium,No,All
+SYM-03,Steering wheel shakes at highway speed,Unbalanced wheels; worn tie rod; warped front rotors (if the shake is worse when braking),Note speed range where shaking starts; check tire wear pattern,Front brake rotor,high,No,All
+SYM-04,Car pulls to one side,Uneven tire pressure; wheel alignment; stuck brake caliper,Check all four tire pressures; check whether one wheel is hot after driving,Front brake pad set,medium,No,All
+SYM-05,Check engine light is on and steady,Loose gas cap; worn spark plugs; faulty oxygen sensor,Tighten gas cap and drive 20 miles; have codes read. A FLASHING light means stop driving,Spark plug set,medium,No,All
+SYM-06,Weak airflow from the vents,Clogged cabin air filter; failing blower motor,Check cabin filter for dirt and debris; test all fan speeds,Cabin air filter,low,No,All
+SYM-07,Wipers streak or squeak,Worn wiper blades; dirty windshield,Inspect rubber edge for cracks; clean windshield and blades,Front wiper blade set,low,No,All
+SYM-08,One headlight is dim or out,Burned-out bulb; blown fuse,Swap in a known good bulb; check the headlight fuse,"Headlight bulb, low beam",medium,No,All
+SYM-09,Sluggish acceleration or slow response,Dirty engine air filter; worn spark plugs; fuel delivery issue,Inspect engine air filter for dirt; note whether the check engine light is on,Engine air filter; Spark plug set,low,No,All
+SYM-10,Rattling from under the rear seat,Loose battery hold-down clamp,Lift the rear seat cushion and check whether the battery moves,Battery hold-down clamp,low,Yes,ARD-CORA-2024; ARD-CORA-2025
+SYM-11,Car is making a noise,"Cannot determine from this description; ask when it happens, where it comes from, and what it sounds like",Ask follow-up questions before suggesting any part,None,low,No,All
