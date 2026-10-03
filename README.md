@@ -208,3 +208,4 @@ python evals/validate_golden.py   # checks the answer key
 - [ ] LangGraph agent combining RAG with parts-catalog lookup
 - [ ] Expose the knowledge base through an MCP server
 - [ ] Add a PDF-parsing step with realistic PDFs
+
