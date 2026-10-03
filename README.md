@@ -55,3 +55,9 @@ All makes, models, specs, and part numbers are **fictional**. These tables are t
 - `SYM-01` (grinding when braking) and `SYM-03` (steering wheel shakes) are high safety: answers must carry a warning.
 - `SYM-11` ("car is making a noise") is deliberately vague: the right behavior is to ask follow-up questions.
 - A question with no make, model, or year should trigger a clarifying question, not a guess.
+
+### Golden set and validation
+
+`evals/golden_v1.csv` holds 29 test questions with expected answers, sources, and part numbers, all traced to the tables in `data/`. Types: direct, near-duplicate, year trap, cross-document, ambiguous, unanswerable, out-of-scope, safety. Five are held out and not used while tuning.
+
+`python evals/validate_golden.py` checks the answer key is consistent: source files exist, expected parts exist and fit the stated car, IDs are unique. Re-run it whenever the tables, documents, or golden questions change. Chunking and embedding changes are scored by the eval runner instead (coming in a later step).
