@@ -4,7 +4,7 @@ A RAG assistant for a dealer parts-and-service desk. A customer or service advis
 
 > All makes, models, specs, and part numbers in this repo are **fictional**. This is a learning project, not real automotive guidance.
 
-**Status:** data, documents, golden test set, and ingestion are built. Retrieval, generation, the evaluation runner, and the hosted demo are in progress (see [Roadmap](#roadmap)).
+**Status:** data, documents, golden test set, ingestion, and retrieval (with a retrieval scoring script) are built. Baseline retrieval scores, generation, the full evaluation runner, and the hosted demo are in progress (see [Roadmap](#roadmap)).
 
 **Live demo:** _[link, add after deploy]_
 
@@ -73,8 +73,9 @@ flowchart TB
     GOLD["evals/golden_v1.csv"] --> VAL["evals/validate_golden.py"]
     CSV -.-> VAL
     DOCS -.-> VAL
+    GOLD --> RCHK["evals/retrieval_check.py"]
+    RCHK --> RET
     GOLD --> RUNNER["eval runner (planned)"]
-    RUNNER -.-> RET
     RUNNER -.-> ANSW
   end
 ```
@@ -122,15 +123,72 @@ Part numbers and fitment need exact answers, so the parts catalog stays a struct
 - **Run:** `python evals/validate_golden.py` from the repo root. Prints counts by type and split, then `All checks passed.` or a list of errors.
 - **Re-run when:** tables, documents, or golden questions change. Chunking and embedding changes are scored by the eval runner instead.
 
+### `src/retrieve.py`
+- **What:** given a question, finds the most relevant chunks in the Chroma index. It runs on every question.
+- **Steps:**
+  1. **Detect the car:** find the make, model, and year in the question by matching against `models.csv` ("my Vale" implies Norvik). Rule-based on purpose: free, simple, and easy to debug.
+  2. **Build a filter:** for each detected field, match the stated value **or** `"all"`, so general chunks (symptom guides, FAQs, bulletins that cover every year) are not filtered out.
+  3. **Embed and search:** the question is embedded with the same model as the chunks, and Chroma returns the k nearest chunks (default 5) among those that passed the filter.
+  4. **Return hits:** rank, source file, cosine distance (smaller is closer), text, and metadata.
+- **Run:** `python src/retrieve.py "lug nut torque on my 2024 Norvik Vale?"`. Add `--no-filter` to search every chunk and see what the filter changes.
+
+```mermaid
+flowchart TB
+  Q["Question"] --> D["Detect the car<br/>make, model, year"]
+  D --> F["Build filter<br/>car value or 'all'"]
+  F --> S["Embed question and search<br/>nearest chunks inside filter"]
+  IDX[("Chroma index")] --> S
+  S --> H["Top-k chunks<br/>source, distance, text"]
+```
+
+- **Why the filter matters:** Tern and Vale documents differ by one number, so they embed almost identically. Without the filter, wrong-car chunks can land in the top results. With it, they are never searched.
+- **What the filter cannot fix:** the right car's own documents still compete with each other (for example a symptom guide outranking a torque document). That is what hybrid search and reranking address later.
+- **Limits:** a year that is not in the table (such as "2023 Cora") or a misspelled model name is not detected, so no filter is applied. Production systems often use an LLM for this step.
+
+### `evals/retrieval_check.py`
+- **What:** scores retrieval only, with no Claude calls. For each golden question it asks: did the right source document show up in the top k, and how high?
+- **Steps:**
+  1. Load the golden questions, keep the dev split (holdout only with `--include-holdout`), and skip questions with no expected source (unanswerable, out of scope), since those are judged on the answer.
+  2. Run `retrieve()` for each question.
+  3. Find the rank of the first expected source in the results.
+  4. Report scores by question type, and list every miss (right source not in the top 3) with what came back instead.
+- **Metrics:**
+  - `hit@k`: share of questions where any expected source is in the top k.
+  - `MRR`: mean of 1/rank of the first expected source (1.0 means always first, 0 means never found).
+- **Run:**
+  - `python evals/retrieval_check.py --tag baseline`
+  - `python evals/retrieval_check.py --no-filter --tag nofilter` to compare with the filter off
+  - `--k 10` changes how many results are retrieved. `--tag name` saves `evals/results/retrieval_name.csv`.
+
+```mermaid
+flowchart TB
+  G["golden_v1.csv"] --> P["Keep dev questions<br/>skip those with no expected source"]
+  P --> R["retrieve() for each question"]
+  R --> C["Find rank of first expected source"]
+  C --> M["hit@1, hit@3, hit@k, MRR<br/>by question type"]
+  C --> X["Miss report<br/>right source not in top 3"]
+```
+
+Worked example of the scores (three questions, right source at rank 1, rank 3, and not found):
+
+| Question | hit@1 | hit@3 | 1/rank |
+|---|---|---|---|
+| A (rank 1) | yes | yes | 1.00 |
+| B (rank 3) | no | yes | 0.33 |
+| C (not found) | no | no | 0.00 |
+| **Average** | **0.33** | **0.67** | **0.44 (MRR)** |
+
+- **Hit means any expected source:** a cross-document question counts as a hit if either of its sources shows up. A stricter "all sources found" metric can be added later.
+- **Small sets are noisy:** with about 20 scored questions, one flip moves a score by around 5 points. Read the misses, not just the averages.
+
 ### `requirements.txt`, `.gitignore`, `.env`
 - `requirements.txt`: Python dependencies (pandas, anthropic, python-dotenv, chromadb).
 - `.gitignore`: keeps secrets (`.env`), virtual environments, caches, `index/`, and `docs/_rejected/` out of the repo.
 - `.env`: holds `ANTHROPIC_API_KEY`. Never commit it.
 
 ### Coming next
-- `src/retrieve.py`: top-k search with make/model/year filtering, and a log of misses.
 - `src/answer.py`: grounded prompt, citations, abstention, safety warnings.
-- `evals/run_evals.py`: runs all golden questions and reports hit@k, MRR, part-number accuracy, abstention and safety rates by question type.
+- `evals/run_evals.py`: full eval runner for the answers (part-number accuracy, abstention and safety rates, LLM judge), building on the retrieval scores.
 - `app/`: Streamlit chat page with password protection and cost caps.
 
 ## Data
@@ -151,9 +209,12 @@ Part numbers and fitment need exact answers, so the parts catalog stays a struct
 
 **Results:** _[add after the first run: hit@k, MRR, part-number accuracy, abstention and safety rates, by question type]_
 
+Retrieval scores come from `python evals/retrieval_check.py --tag <name>`.
+
 | Change | hit@3 | MRR | Notes |
 |---|---|---|---|
-| _baseline_ | | | |
+| baseline (car filter on, k=5) | | | |
+| car filter off | | | |
 
 Change one thing at a time and log it here.
 
@@ -163,8 +224,8 @@ Change one thing at a time and log it here.
 carassist/
   data/        # CSV tables (ground truth) + data dictionary
   docs/        # generated text documents (the corpus)
-  src/         # generate_docs.py, ingest.py (retrieve.py, answer.py to come)
-  evals/       # golden_v1.csv, validate_golden.py (run_evals.py to come)
+  src/         # generate_docs.py, ingest.py, retrieve.py (answer.py to come)
+  evals/       # golden_v1.csv, validate_golden.py, retrieval_check.py (run_evals.py to come)
   app/         # Streamlit app (to come)
   README.md
   requirements.txt
@@ -182,6 +243,8 @@ echo 'ANTHROPIC_API_KEY=your-key' > .env
 
 python src/ingest.py              # builds index/chroma (first run downloads the embedding model)
 python evals/validate_golden.py   # checks the answer key
+python evals/retrieval_check.py --tag baseline   # scores retrieval on the dev questions
+python src/retrieve.py "lug nut torque on my 2024 Norvik Vale?"   # try one question
 ```
 
 ## Known limitations
@@ -190,6 +253,9 @@ python evals/validate_golden.py   # checks the answer key
 - Templated documents are repetitive by design, which makes near-duplicate retrieval harder. Real manuals read more naturally.
 - The LLM-document checker validates part numbers only. Other facts in those documents are spot-checked by hand.
 - Every document is currently one chunk, so chunking strategy is not yet a meaningful variable.
+- Car detection is rule-based: unknown years or misspelled model names are not detected, so no filter is applied.
+- The car filter removes wrong-car chunks but does not help when the right car's own documents compete with each other.
+- Retrieval scores count a hit if any expected source is found, which is lenient for cross-document questions.
 - _[Add retrieval and generation failures here as you find them]_
 
 ## Roadmap
@@ -198,7 +264,7 @@ python evals/validate_golden.py   # checks the answer key
 - [x] Document generation (templated plus LLM with checks)
 - [x] Golden test set and validator
 - [x] Ingestion (chunk, embed, Chroma)
-- [ ] Retrieval with metadata filtering, and a log of misses
+- [ ] Retrieval with metadata filtering (code and scoring script written; baseline and miss analysis pending)
 - [ ] Grounded generation with citations, abstention, and safety warnings
 - [ ] Eval runner (hit@k, MRR, rule checks, LLM judge)
 - [ ] Streamlit app with password protection and cost caps, deployed
@@ -208,4 +274,3 @@ python evals/validate_golden.py   # checks the answer key
 - [ ] LangGraph agent combining RAG with parts-catalog lookup
 - [ ] Expose the knowledge base through an MCP server
 - [ ] Add a PDF-parsing step with realistic PDFs
-
