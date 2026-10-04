@@ -2,3 +2,5 @@ pandas
 anthropic
 python-dotenv
 chromadb
+streamlit>=1.50
+pysqlite3-binary; sys_platform == "linux"

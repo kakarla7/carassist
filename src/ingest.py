@@ -64,10 +64,12 @@ def chunk_body(title, body):
 
 
 # ---------- 3. embed + store ----------
-def build_index(embedding_function=None):
+def build_index(embedding_function=None, persist=True):
     """embedding_function=None uses Chroma's default: all-MiniLM-L6-v2 (small, local, free).
-    To compare embedding models later, pass a different one here."""
-    client = chromadb.PersistentClient(path=str(INDEX_DIR))
+    To compare embedding models later, pass a different one here.
+    persist=False builds the index in memory only (used by the app, so it never depends on an
+    index folder written by a different Chroma version)."""
+    client = chromadb.PersistentClient(path=str(INDEX_DIR)) if persist else chromadb.EphemeralClient()
     if COLLECTION in [c.name for c in client.list_collections()]:
         client.delete_collection(COLLECTION)         # rebuild from scratch
     kwargs = {"embedding_function": embedding_function} if embedding_function else {}
