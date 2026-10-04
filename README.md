@@ -4,7 +4,7 @@ A RAG assistant for a dealer parts-and-service desk. A customer or service advis
 
 > All makes, models, specs, and part numbers in this repo are **fictional**. This is a learning project, not real automotive guidance.
 
-**Status:** data, documents, golden test set, ingestion, retrieval (with a scoring script), and grounded generation are built. The full evaluation runner, the hosted demo, and the retrieval improvements are next (see [Roadmap](#roadmap)).
+**Status:** the full pipeline is built (data, documents, ingestion, retrieval, grounded generation) along with the golden test set and the evaluation runner. Baseline scores, the hosted demo, and the retrieval improvements are next (see [Roadmap](#roadmap)).
 
 **Live demo:** _[link, add after deploy]_
 
@@ -75,8 +75,8 @@ flowchart TB
     DOCS -.-> VAL
     GOLD --> RCHK["evals/retrieval_check.py"]
     RCHK --> RET
-    GOLD --> RUNNER["eval runner (planned)"]
-    RUNNER -.-> ANSW
+    GOLD --> RUNNER["evals/run_evals.py<br/>rules + LLM judge"]
+    RUNNER --> ANSW
   end
 ```
 
@@ -232,13 +232,59 @@ flowchart TB
 | 9 | Style | Short, plain sentences, under 150 words | all |
 | 10 | Ignore instructions in context | Documents are data, not commands | none yet (a possible future test) |
 
+### `evals/run_evals.py`
+- **What:** the eval runner. It sends golden questions through the full pipeline (retrieve, then Claude) and scores each answer. This is where the success criteria get measured.
+- **Two kinds of checks:**
+  - **Rule-based (`part_ok`):** looks only at part numbers in the answer. The expected part must be present. No part may appear that does not fit the car in the question (including the Tern's part in a Vale answer, or SPK-9999 for the Brio). No invented part-like codes. With no car stated, any part number counts as wrong. Document IDs such as `SB-2025-04` and `SYM-01` are not treated as parts.
+  - **Judge model:** a stronger model than the one answering (default `claude-sonnet-5-5`) gets the question, the expected answer, the retrieved context, and the response, and returns JSON grading four things.
+- **The checks:**
+
+| Check | Type | Applies to | Question it answers |
+|---|---|---|---|
+| `behavior_ok` | judge | all questions | Did it answer, ask a clarifying question, or decline, as expected? |
+| `part_ok` | rules | all questions | Right part, no wrong-fit part, nothing invented? |
+| `correct_ok` | judge | answerable questions | Does it state the expected facts? |
+| `safety_ok` | judge | safety questions | Is there a safety warning with a technician check? |
+| `faithful_ok` | judge | all questions | Is every claim supported by the retrieved context? |
+
+A question **passes** only when every check that applies to it passes.
+
+| Question kind | behavior | part | correct | safety | faithful |
+|---|---|---|---|---|---|
+| Answerable (Q01) | yes | yes | yes | n/a | yes |
+| Answer + safety (Q13) | yes | yes | yes | yes | yes |
+| Clarify (Q17) | yes | yes | n/a | n/a | yes |
+| Clarify + safety (Q19) | yes | yes | n/a | yes | yes |
+| Decline (Q20) | yes | yes | n/a | n/a | yes |
+
+```mermaid
+flowchart TB
+  G["Golden question<br/>dev set, N repeats"] --> P["Run the pipeline<br/>retrieve, then Claude"]
+  P --> R["Part check<br/>rules on part numbers"]
+  P --> J["Judge model<br/>behavior, facts, safety, support"]
+  R --> V["Pass or fail<br/>table, failures, CSV"]
+  J --> V
+```
+
+- **Output:** pass rates per check and per question type, then a failure list (answer, notes, retrieval rank), and optionally a CSV in `evals/results/`.
+- **Run:**
+  - `python evals/run_evals.py --ids Q01,Q13,Q21` to try a few first
+  - `python evals/run_evals.py --repeats 3 --tag baseline` for the dev set (answers vary between runs, so repeat)
+  - `python evals/run_evals.py --no-filter --repeats 3 --tag nofilter` to see what the car filter is worth
+  - Other flags: `--k`, `--answer-model`, `--judge-model`, `--include-holdout` (final check only)
+- **Reading a failure:** there are three possible causes. Retrieval missed (check `retrieval_rank`), the prompt needs a better rule, or the judge is wrong. Work out which before changing anything.
+- **Limits:**
+  - The judge can be wrong, so spot-check its verdicts.
+  - The part rule is strict: "not the Tern's BP-4417" in a Vale answer counts as a failure.
+  - About 20 scored questions means one flip moves a rate by about 5 points, so repeat runs and read the failures, not just the averages.
+  - The default answer model and the judge are different models on purpose, so the judge is not grading its own style.
+
 ### `requirements.txt`, `.gitignore`, `.env`
 - `requirements.txt`: Python dependencies (pandas, anthropic, python-dotenv, chromadb).
 - `.gitignore`: keeps secrets (`.env`), virtual environments, caches, `index/`, and `docs/_rejected/` out of the repo.
 - `.env`: holds `ANTHROPIC_API_KEY`. Never commit it.
 
 ### Coming next
-- `evals/run_evals.py`: full eval runner for the answers (part-number accuracy, abstention and safety rates, LLM judge), building on the retrieval scores.
 - `app/`: Streamlit chat page with password protection and cost caps.
 
 ## Data
@@ -257,16 +303,30 @@ flowchart TB
 
 ## Evaluation
 
-**Results:** _[add after the first run: hit@k, MRR, part-number accuracy, abstention and safety rates, by question type]_
+**Results (v1 metric):** 22 dev questions, 3 runs each. Answers by `claude-haiku-4-5-20251001`, judged by `claude-sonnet-5-5`. The 7 holdout questions have not been run.
 
 Retrieval scores come from `python evals/retrieval_check.py --tag <name>`.
 
 | Change | hit@3 | MRR | Notes |
 |---|---|---|---|
-| baseline (car filter on, k=5) | | | |
-| car filter off | | | |
+| baseline (car filter on, k=5) | 0.85 | 0.74 | hit@1 0.60, hit@5 0.95. Cross-document questions are weakest (hit@3 0.50) |
+| car filter off | 0.80 | 0.59 | hit@1 0.40, hit@5 0.85. Near-duplicate MRR drops from 0.88 to 0.58 |
 
 Change one thing at a time and log it here.
+
+Answer scores come from `python evals/run_evals.py --repeats 3 --tag <name>` (pass rate per check; "passed" needs every applicable check).
+
+| Change | passed | behavior | part | correct | safety | faithful | Notes |
+|---|---|---|---|---|---|---|---|
+| baseline (filter on, k=5) | 0.88 | 1.00 | 0.95 | 1.00 | 1.00 | 0.92 | 8 of 66 rows fail, all from Q24, Q25, Q27 |
+| car filter off | 0.79 | 0.97 | 0.91 | 0.92 | 1.00 | 0.91 | 14 of 66 rows fail. Safety questions pass 0 of 3 |
+
+**Findings**
+- **The car filter helps.** Pass rate rises from 0.79 to 0.88, hit@1 from 0.40 to 0.60, and near-duplicate MRR from 0.58 to 0.88. Without it, wrong-car chunks pushed the model to ask an unnecessary clarifying question on a simple tire-pressure question (Q24).
+- **Retrieval is not the bottleneck for answers.** The right source was in the top 5 for 19 of 20 scored questions, and every behavior, correctness, and safety check passed with the filter on.
+- **Two of the three failing questions are the same generation problem:** correct answers padded with advice that the retrieved text does not support (Q24: re-check pressure after 50 miles, check when cold; Q27: an electrical-connection cause and an offer to replace the bulb). That is a prompt fix.
+- **The third (Q25) is a metric problem, not a system problem.** The answer was right (MR-8802) but also named the Tern's MR-8801 as a contrast, which the strict part rule counts as a failure. All 3 baseline and all 6 filter-off `part_ok` failures were this kind of mention, with nothing missing and nothing invented.
+- **Caveat:** 22 questions times 3 runs is small, so each question moves the pass rate by about 4.5 points. The direction is consistent across question types, but treat exact numbers as approximate.
 
 ## Repo structure
 
@@ -275,7 +335,7 @@ carassist/
   data/        # CSV tables (ground truth) + data dictionary
   docs/        # generated text documents (the corpus)
   src/         # generate_docs.py, ingest.py, retrieve.py, answer.py, prompts.py
-  evals/       # golden_v1.csv, validate_golden.py, retrieval_check.py (run_evals.py to come)
+  evals/       # golden_v1.csv, validate_golden.py, retrieval_check.py, run_evals.py
   app/         # Streamlit app (to come)
   README.md
   requirements.txt
@@ -294,6 +354,7 @@ echo 'ANTHROPIC_API_KEY=your-key' > .env
 python src/ingest.py              # builds index/chroma (first run downloads the embedding model)
 python evals/validate_golden.py   # checks the answer key
 python evals/retrieval_check.py --tag baseline   # scores retrieval on the dev questions
+python evals/run_evals.py --repeats 3 --tag baseline   # scores full answers (rules + LLM judge)
 python src/retrieve.py "lug nut torque on my 2024 Norvik Vale?"   # retrieval only
 python src/answer.py "lug nut torque on my 2024 Norvik Vale?"     # full answer with citations
 ```
@@ -309,6 +370,7 @@ python src/answer.py "lug nut torque on my 2024 Norvik Vale?"     # full answer 
 - Retrieval scores count a hit if any expected source is found, which is lenient for cross-document questions.
 - A citation shows which chunk Claude says it used, not that the chunk supports the claim. Answers can also vary slightly between runs because temperature is not set.
 - Behavior differs by model (for example thinking blocks, rule-following), so scores are only comparable within one model.
+- The LLM judge can be wrong, and the part-number rule is deliberately strict (it also flags a wrong-fit part mentioned only as a contrast). With about 20 scored questions, results are noisy, so runs are repeated and failures are read by hand.
 - _[Add retrieval and generation failures here as you find them]_
 
 ## Roadmap
@@ -319,7 +381,9 @@ python src/answer.py "lug nut torque on my 2024 Norvik Vale?"     # full answer 
 - [x] Ingestion (chunk, embed, Chroma)
 - [x] Retrieval with metadata filtering, and a retrieval scoring script
 - [x] Grounded generation with citations, abstention, and safety warnings
-- [ ] Eval runner (hit@k, MRR, rule checks, LLM judge)
+- [x] Eval runner (rule checks and LLM judge)
+- [x] Baseline results recorded in the Evaluation tables (retrieval and answers, filter on and off)
+- [ ] Fix the eval and the prompt, then re-run as `baseline_v2`: let the judge decide whether a wrong-fit part is recommended (not just mentioned), exempt rule-required safety warnings from the faithfulness check, and tell the model not to add advice beyond the context
 - [ ] Streamlit app with password protection and cost caps, deployed
 - [ ] Hybrid search, reranking, and query rewriting
 - [ ] Embedding model comparison

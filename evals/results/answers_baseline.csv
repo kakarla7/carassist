@@ -1,0 +1,290 @@
+id,type,question,retrieval_rank,part_ok,answer,cited,behavior_ok,correct_ok,safety_ok,faithful_ok,notes,passed,run
+Q01,direct,what torque do i use on the lug nuts for my 2024 Arden Aria?,1.0,True,"For your 2024 Arden Aria, torque the lug nuts to **80 ft-lb in a star pattern** [1].
+
+This is the final torque after you've tightened them by hand and lowered the car. Also remember to re-check the torque after about 50 miles of driving [1].",docs/tire_change/tire_change_ARD-ARIA-2024.md,True,True,,True,"States 80 ft-lb in a star pattern and the 50-mile re-check, all supported by context [1].",True,1
+Q01,direct,what torque do i use on the lug nuts for my 2024 Arden Aria?,1.0,True,"For your 2024 Arden Aria, torque the lug nuts to **80 ft-lb in a star pattern** [1].
+
+This is done after you lower the car. You should also re-check the torque after about 50 miles of driving [1].",docs/tire_change/tire_change_ARD-ARIA-2024.md,True,True,,True,"States 80 ft-lb in a star pattern and the 50-mile re-check, all supported by context step 6-7; 'after you lower the car' matches the step order.",True,2
+Q01,direct,what torque do i use on the lug nuts for my 2024 Arden Aria?,1.0,True,"For your 2024 Arden Aria, torque the lug nuts to **80 ft-lb in a star pattern** [1].
+
+This is done after you lower the car. Also, re-check the torque after about 50 miles of driving [1].",docs/tire_change/tire_change_ARD-ARIA-2024.md,True,True,,True,"States 80 ft-lb in a star pattern and the 50-mile re-check, both supported by the context; the torque step follows lowering the car in the listed order.",True,3
+Q02,direct,"How much oil does the 2025 Norvik Sable take, and what kind?",1.0,True,"The 2025 Norvik Sable takes **0W-20 oil** with a capacity of **4.0 liters** [1]. Oil changes are due every 7,500 miles, and the oil filter part number is OF-9102 [1].",docs/fluids/fluids_NOR-SABLE-2025.md,True,True,,True,States 0W-20 and 4.0 liters as expected; the extra interval and filter part number OF-9102 are supported by context [1].,True,1
+Q02,direct,"How much oil does the 2025 Norvik Sable take, and what kind?",1.0,True,"The 2025 Norvik Sable takes **0W-20 oil** with a capacity of **4.0 liters**. [1][3]
+
+Change the oil every 7,500 miles. The oil filter part number is OF-9102. [1][2]",docs/fluids/fluids_NOR-SABLE-2025.md;docs/maintenance/maintenance_NOR-SABLE-2025.md;docs/faq/faq_norvik_sable.md,True,True,,True,"States 0W-20 and 4.0 liters, matching the key facts; the added oil change interval and filter part number OF-9102 are also supported by the context.",True,2
+Q02,direct,"How much oil does the 2025 Norvik Sable take, and what kind?",1.0,True,"The 2025 Norvik Sable takes **0W-20 oil, with a capacity of 4.0 liters** [1]. 
+
+Oil changes are due every 7,500 miles, and the oil filter part number is OF-9102 [1].",docs/fluids/fluids_NOR-SABLE-2025.md,True,True,,True,"States 0W-20 and 4.0 liters, matching the expected answer; the extra interval and filter part number are supported by context [1].",True,3
+Q04,direct,Where are the fuse boxes on a 2025 Norvik Vale?,1.0,True,"The fuse boxes on a 2025 Norvik Vale are located in two places: [1]
+
+1. **Cabin**: inside the glovebox
+2. **Engine bay**: rear left near the firewall
+
+A fuse diagram is printed on each fuse box cover. When you replace a blown fuse, use one with the same amperage. [1]",docs/fuse_box/fuse_box_NOR-VALE-2025.md,True,True,,True,"States both fuse box locations (glovebox in the cabin, rear left near the firewall in the engine bay) and the supported extras on the cover diagram and same-amperage replacement, all matching the context.",True,1
+Q04,direct,Where are the fuse boxes on a 2025 Norvik Vale?,1.0,True,"The fuse boxes on a 2025 Norvik Vale are in two locations: [1]
+
+1. **Cabin**: inside the glovebox
+2. **Engine bay**: rear left near the firewall
+
+A fuse diagram is printed on each fuse box cover so you can find the right fuse. [1]",docs/fuse_box/fuse_box_NOR-VALE-2025.md,True,True,,True,"The response gives both fuse box locations (glovebox in the cabin, rear left near the firewall in the engine bay) and the cover diagram detail, all supported by context [1].",True,2
+Q04,direct,Where are the fuse boxes on a 2025 Norvik Vale?,1.0,True,"On a 2025 Norvik Vale, there are two fuse boxes: [1]
+
+1. **Cabin fuse box:** inside the glovebox
+2. **Engine bay fuse box:** rear left near the firewall
+
+A fuse diagram is printed on each fuse box cover. [1]",docs/fuse_box/fuse_box_NOR-VALE-2025.md,True,True,,True,"States both fuse box locations (glovebox; engine bay rear left near firewall) matching the expected answer, and the fuse diagram detail is supported by context [1].",True,3
+Q05,near_duplicate,lug nut torque on my 2024 Norvik Vale?,1.0,True,"The lug nut torque for your 2024 Norvik Vale is **88 ft-lb**, applied in a star pattern. [1]
+
+After you install the wheel, tighten the lug nuts by hand first in a star pattern, then lower the car. Finally, torque them to 88 ft-lb in a star pattern again. Re-check the torque after about 50 miles. [1]",docs/tire_change/tire_change_NOR-VALE-2024.md,True,True,,True,"States 88 ft-lb in a star pattern, matching the expected answer and the context (step 6), with supported extra steps and no safety warning needed.",True,1
+Q05,near_duplicate,lug nut torque on my 2024 Norvik Vale?,1.0,True,"The lug nut torque for your 2024 Norvik Vale is **88 ft-lb**. Tighten them in a star pattern after lowering the car, and re-check the torque after about 50 miles. [1]",docs/tire_change/tire_change_NOR-VALE-2024.md,True,True,,True,"States 88 ft-lb with star pattern and 50-mile re-check, all supported by the tire change document.",True,2
+Q05,near_duplicate,lug nut torque on my 2024 Norvik Vale?,1.0,True,"The lug nut torque for your 2024 Norvik Vale is **88 ft-lb** [1].
+
+Tighten them in a star pattern, and re-check the torque after about 50 miles [1].",docs/tire_change/tire_change_NOR-VALE-2024.md,True,True,,True,"States 88 ft-lb, matching the expected value and the context. The star pattern and the re-check after about 50 miles are both supported by the cited source.",True,3
+Q06,near_duplicate,lug nut torque for a 2024 Norvik Tern,1.0,True,"For a 2024 Norvik Tern, torque the lug nuts to **85 ft-lb in a star pattern** [1].
+
+This is done after lowering the car. Also re-check the torque after about 50 miles of driving [1].",docs/tire_change/tire_change_NOR-TERN-2024.md,True,True,,True,"States 85 ft-lb in a star pattern, matching the Norvik Tern context, plus the 50-mile re-check; no unsupported claims.",True,1
+Q06,near_duplicate,lug nut torque for a 2024 Norvik Tern,1.0,True,"For a 2024 Norvik Tern, torque the lug nuts to **85 ft-lb in a star pattern** [1].
+
+After lowering the car, re-check the torque after about 50 miles of driving [1].",docs/tire_change/tire_change_NOR-TERN-2024.md,True,True,,True,"States 85 ft-lb in a star pattern and the 50-mile re-check, both supported by context [1], with no use of the Vale value.",True,2
+Q06,near_duplicate,lug nut torque for a 2024 Norvik Tern,1.0,True,"The lug nut torque for a 2024 Norvik Tern is **85 ft-lb** [1].
+
+Tighten them in a star pattern, and re-check the torque after about 50 miles [1].",docs/tire_change/tire_change_NOR-TERN-2024.md,True,True,,True,"States 85 ft-lb, matching the expected answer and context [1]; the star pattern and 50-mile re-check are also supported by the context.",True,3
+Q07,near_duplicate,"need front brake pads for a 2025 Norvik Vale, what's the part number",1.0,True,"For a 2025 Norvik Vale, the front brake pad part number is **BP-4418** [2].",docs/parts_list/parts_list_NOR-VALE-2025.md,True,True,,True,"States BP-4418 for the 2025 Norvik Vale, matching the expected answer and the cited parts list; it does not mention the Tern's BP-4417, but nothing in it contradicts the key fact.",True,1
+Q07,near_duplicate,"need front brake pads for a 2025 Norvik Vale, what's the part number",1.0,True,"For a 2025 Norvik Vale, the front brake pad set part number is **BP-4418** [2].",docs/parts_list/parts_list_NOR-VALE-2025.md,True,True,,True,"States BP-4418 for the 2025 Vale, matching the expected answer and the parts list [2]; it does not mention the Tern's BP-4417, but that is not required.",True,2
+Q07,near_duplicate,"need front brake pads for a 2025 Norvik Vale, what's the part number",1.0,True,"For a 2025 Norvik Vale, the front brake pad set part number is **BP-4418** [2].",docs/parts_list/parts_list_NOR-VALE-2025.md,True,True,,True,"States BP-4418 for the 2025 Vale front brake pads, matching the expected answer and the parts list [2]; it does not mention the Tern part, which is not required.",True,3
+Q09,year_trap,which engine air filter fits a 2025 Arden Cora?,1.0,True,"For a 2025 Arden Cora, the engine air filter part number is **AF-6411** [1][3].
+
+You should inspect this filter at each oil change (every 7,500 miles) and replace it when needed [3].",docs/parts_list/parts_list_ARD-CORA-2025.md;docs/maintenance/maintenance_ARD-CORA-2025.md,True,True,,True,"States AF-6411 for the 2025 Cora, matching the key fact; the inspect-at-each-oil-change and 7,500-mile claims are supported by context, though 'replace when needed' is mild generic wording.",True,1
+Q09,year_trap,which engine air filter fits a 2025 Arden Cora?,1.0,True,"The engine air filter that fits a 2025 Arden Cora is **AF-6411** [1][3].
+
+This filter should be inspected at each oil change [3], which is every 7,500 miles [2].",docs/parts_list/parts_list_ARD-CORA-2025.md;docs/fluids/fluids_ARD-CORA-2025.md;docs/maintenance/maintenance_ARD-CORA-2025.md,True,True,,True,"States AF-6411 for the 2025 Cora, matching the key fact; the inspection interval and the 7,500-mile oil change interval are both supported by the context.",True,2
+Q09,year_trap,which engine air filter fits a 2025 Arden Cora?,1.0,True,"The engine air filter for a 2025 Arden Cora is **AF-6411** [1][3].
+
+This filter should be inspected at each oil change (every 7,500 miles) [3].",docs/parts_list/parts_list_ARD-CORA-2025.md;docs/maintenance/maintenance_ARD-CORA-2025.md,True,True,,True,"Gives AF-6411 for the 2025 Cora and the inspect-at-each-oil-change interval (7,500 miles), both supported by the context; it does not mention the 2024 AF-6410 part, which is not needed.",True,3
+Q10,year_trap,what do I torque the wheel nuts to on a 2025 Arden Cora,1.0,True,"For a 2025 Arden Cora, torque the lug nuts to **90 ft-lb** [1][2].
+
+Important: tighten them in a star pattern, then lower the car. After driving about 50 miles, re-check the torque to make sure it's still at 90 ft-lb [2].",docs/bulletin/SB-2025-01.md;docs/tire_change/tire_change_ARD-CORA-2025.md,True,True,,True,"States 90 ft-lb for the 2025 Cora, matching the expected answer; the star pattern and 50-mile re-check are both supported by the tire change document. It does not mention the 2024 value of 80 ft-lb, but that was not required.",True,1
+Q10,year_trap,what do I torque the wheel nuts to on a 2025 Arden Cora,1.0,True,"For a 2025 Arden Cora, torque the lug nuts to **90 ft-lb** in a star pattern [1][2].
+
+After you tighten them, lower the car and then re-check the torque after about 50 miles of driving [2].",docs/bulletin/SB-2025-01.md;docs/tire_change/tire_change_ARD-CORA-2025.md,True,True,,True,"States 90 ft-lb in a star pattern and the 50-mile re-check, all supported by the context; it omits the 2024 value of 80, which is not required.",True,2
+Q10,year_trap,what do I torque the wheel nuts to on a 2025 Arden Cora,1.0,True,"For a 2025 Arden Cora, torque the lug nuts to **90 ft-lb in a star pattern** [1][2].
+
+After you tighten them, lower the car and then re-check the torque after about 50 miles of driving [2].",docs/bulletin/SB-2025-01.md;docs/tire_change/tire_change_ARD-CORA-2025.md,True,True,,True,"States 90 ft-lb in a star pattern for the 2025 Cora and the 50-mile re-check, all supported by context; the 2024 value (80) is not mentioned but the answer does not contradict it.",True,3
+Q11,year_trap,Can I put the regular group 35 battery in my 2025 Arden Aria?,1.0,True,"No, do not use a Group 35 battery in your 2025 Aria. 
+
+Your 2025 Arden Aria requires a **Group 48 AGM battery only** (part BAT-48A) [1][2]. The older Group 35 flooded battery used on the 2024 Aria will not work. Using the wrong battery type can cause charging problems [1].
+
+Make sure any replacement battery is AGM type and fits your 2025 model [2].",docs/bulletin/SB-2025-04.md;docs/battery/battery_ARD-ARIA-2025.md,True,True,,True,"The response says no, names the Group 48 AGM battery BAT-48A, and says Group 35 is for the 2024 model. All of this is supported by the context, though it calls the Group 35 ""flooded"" and ""will not work"", which the bulletin supports only loosely (it says not to fit it).",True,1
+Q11,year_trap,Can I put the regular group 35 battery in my 2025 Arden Aria?,1.0,True,"No, do not use the Group 35 battery in your 2025 Aria. 
+
+Your 2025 Aria requires a **Group 48 AGM battery only** (part number **BAT-48A**) [1][2]. The Group 35 flooded battery from the 2024 model will not work properly. Using the wrong battery type can cause charging problems [1].
+
+Make sure to replace it with an AGM battery of the correct type. We can install it for you if you'd like.",docs/bulletin/SB-2025-04.md;docs/battery/battery_ARD-ARIA-2025.md,True,True,,True,"Correctly says no, specifies Group 48 AGM BAT-48A (BAT-35 is the 2024 battery); all claims supported by context.",True,2
+Q11,year_trap,Can I put the regular group 35 battery in my 2025 Arden Aria?,1.0,True,"No, don't use a Group 35 battery in your 2025 Aria. Your car requires a **Group 48 AGM battery only** (part BAT-48A). Using a Group 35 flooded battery instead can cause charging problems. [1]
+
+Always replace it with an AGM battery [2]. If you need it installed, we can do that for you at the service desk.",docs/bulletin/SB-2025-04.md;docs/battery/battery_ARD-ARIA-2025.md,True,True,,True,"Correctly says no, requires Group 48 AGM BAT-48A, warns of charging problems; claims supported by context.",True,3
+Q13,cross_document,grinding noise when I brake in my 2024 Norvik Tern. what's wrong and what part do I need?,2.0,True,"**Safety first:** A grinding noise when braking is a safety issue. Have a technician inspect your brakes before you drive much further. This affects your stopping power. [2]
+
+**What's likely happening:** The grinding sound is typically caused by worn brake pads. When the pad material gets too thin, the metal backing contacts the rotor, creating that noise. [1][2]
+
+**What you need:** For your 2024 Norvik Tern, the front brake pad set is **BP-4417**. [3]
+
+You may also need a front brake rotor (**BR-7710**) if the rotor is scored, but a technician should confirm that after inspecting. [2][3]
+
+Get this checked soon—don't delay on brake work.",docs/conversation/conversation_02_NOR-TERN-2024_SYM-01.md;docs/symptom/SYM-01.md;docs/parts_list/parts_list_NOR-TERN-2024.md,True,True,True,True,"States worn pads as the likely cause, gives front pad set BP-4417, and warns that braking is a safety issue and a technician should inspect; the optional rotor BR-7710 mention is supported by the context.",True,1
+Q13,cross_document,grinding noise when I brake in my 2024 Norvik Tern. what's wrong and what part do I need?,2.0,True,"**Safety first:** A grinding noise when braking affects your stopping power and safety. Have a technician confirm the diagnosis before you replace parts. Do not keep driving normally. [2]
+
+**What's likely happening:** The grinding sound is typically caused by worn brake pads. When the pad material gets too thin, the metal backing contacts the rotor, creating that noise. [2]
+
+**What you need:** For your 2024 Norvik Tern, the front brake pad set is **BP-4417**. [3]
+
+You may also want a technician to check the front brake rotor (**BR-7710**) to see if it's been damaged by the worn pads. [3]
+
+Get this inspected and fixed soon for your safety.",docs/symptom/SYM-01.md;docs/parts_list/parts_list_NOR-TERN-2024.md,True,True,True,True,"States worn pads as the likely cause, gives front pad set BP-4417, and warns about safety with technician confirmation; the rotor suggestion (BR-7710) is supported by the context.",True,2
+Q13,cross_document,grinding noise when I brake in my 2024 Norvik Tern. what's wrong and what part do I need?,2.0,True,"**Safety first:** A grinding noise when braking is a serious issue that affects your stopping power. Have a technician inspect the brakes before you replace any parts. [2]
+
+**What's likely happening:** The grinding sound is typically caused by worn brake pads. When the pad material gets too thin, the metal backing contacts the rotor, creating that metal-on-metal noise. [1] [2]
+
+**What you need:** For your 2024 Norvik Tern, the front brake pad set part number is **BP-4417**. [3]
+
+You can check the pad thickness yourself by looking through the wheel spokes to see how worn they are. [1] [2]
+
+**Important:** Make sure you get the Tern pads (BP-4417), not the Vale pads—they look similar but are not interchangeable. [5]
+
+I can't quote pricing or check stock, but your service advisor can help with that.",docs/conversation/conversation_02_NOR-TERN-2024_SYM-01.md;docs/symptom/SYM-01.md;docs/parts_list/parts_list_NOR-TERN-2024.md;docs/bulletin/SB-2024-03-TERN.md,True,True,True,True,"States worn pads as the likely cause, gives BP-4417 for the front pad set, warns about the safety issue and tells the user to have a technician inspect; all claims are supported by the context.",True,3
+Q14,cross_document,2025 Aria just clicks and won't start,4.0,True,"**Safety first:** A clicking engine with dim lights points to a battery problem. Have a technician confirm the diagnosis before you replace parts, since a failing starter can also cause this. Don't drive it unnecessarily—it may leave you stranded. [4]
+
+**What's likely happening:**
+
+Your 2025 Aria probably has a weak or dead battery. The repeated clicking and dim dashboard lights are classic signs. [1][4]
+
+**Quick checks you can do:**
+- Look under the hood at the battery terminals. If you see white or green crusty buildup, that's corrosion blocking the connection. [1]
+- Try a jump-start to see if it helps temporarily. [1]
+
+**If a new battery is needed:**
+
+For your 2025 Aria with the 1.6L engine, you need a **Battery, Group 48 AGM, part number BAT-48A**. [1][2] This is important—the 2025 Aria requires the AGM type, not the older flooded battery. [2]
+
+We can install it for you. A dead battery won't damage other parts, but repeated full drains stress the charging system, so get it fixed soon. [1]",docs/conversation/conversation_04_ARD-ARIA-2025_SYM-02.md;docs/bulletin/SB-2025-04.md;docs/symptom/SYM-02.md,True,True,,True,"States a likely weak or dead battery, corroded terminals, jump-start, and BAT-48A AGM, all supported by the context; it also advises a technician check and warns of stranding, though it assumes dim lights the user never mentioned.",True,1
+Q14,cross_document,2025 Aria just clicks and won't start,4.0,True,"**⚠️ Safety note:** A car that won't start can leave you stranded. Have a technician confirm what's wrong before you replace parts.
+
+Based on your 2025 Aria, the clicking sound with dim dashboard lights points to a **weak or dead battery** [1][4].
+
+**Quick things to check:**
+- Are your dashboard lights dim when you turn the key? [1]
+- Look under the hood at the battery terminals—any white or green crusty buildup? [1]
+
+**Next step:**
+Try a jump-start to confirm. If it works but the problem comes back, you'll need a new battery [1].
+
+**For your 2025 Aria:**
+You need a **Battery, Group 48 AGM, part number BAT-48A** [1][2]. The 2024 model uses a different battery, so make sure you get the right one for your year [2].
+
+We can install it for you. A technician should confirm the diagnosis first [4].",docs/conversation/conversation_04_ARD-ARIA-2025_SYM-02.md;docs/bulletin/SB-2025-04.md;docs/symptom/SYM-02.md,True,True,,True,"States weak/dead battery, terminal corrosion check, jump-start, and BAT-48A AGM, all supported by context; the opening safety note says a technician should check, though a warning was not required.",True,2
+Q14,cross_document,2025 Aria just clicks and won't start,4.0,True,"**⚠️ Safety note:** A car that won't start can leave you stranded. Have a technician confirm the diagnosis before replacing parts.
+
+Based on what you've described, here's what's most likely:
+
+**Your 2025 Aria has a weak or dead battery.** The clicking sound and dim dashboard lights are classic signs. [1][4]
+
+**Quick checks you can do:**
+- Look under the hood at the battery terminals. If you see white or green crusty buildup, that's corrosion blocking the connection. [1]
+- Try a jump-start to see if that gets it running. [1]
+
+**If a jump-start works but the problem comes back, you need a new battery.** For your 2025 Aria with the 1.6L engine, the part is **Battery, Group 48 AGM, part number BAT-48A.** [1][2]
+
+**Important:** The 2025 Aria requires an AGM battery—don't use the older Group 35 battery from the 2024 model, as it can cause charging problems. [2]
+
+We can install it for you. Bring it in when you're ready, and a technician can confirm the diagnosis and handle the replacement.",docs/conversation/conversation_04_ARD-ARIA-2025_SYM-02.md;docs/bulletin/SB-2025-04.md;docs/symptom/SYM-02.md,True,True,,True,"Gives weak/dead battery, terminal check, jump-start and BAT-48A AGM, all supported by context; it assumes dim lights the user never mentioned, and its safety note is mild (stranded risk plus a technician check).",True,3
+Q16,cross_document,"weak air from the vents on my 2025 Sable - which filter, and how often do I change it?",4.0,True,"Weak air from the vents sounds like a **clogged cabin air filter** [1]. For your 2025 Sable, you need **cabin air filter part number CF-2306** [4].
+
+You should replace it every **12,000 miles** [2]. 
+
+One note: the cabin filter sits behind your glovebox and needs a trim removal tool to access [4]. A technician can handle the inspection and installation for you.",docs/conversation/conversation_07_NOR-SABLE-2025_SYM-06.md;docs/faq/faq_norvik_sable.md;docs/maintenance/maintenance_NOR-SABLE-2025.md,True,True,,True,"States clogged cabin air filter, part CF-2306, and 12,000-mile interval, all supported by context; the glovebox/trim tool detail is also in the maintenance doc.",True,1
+Q16,cross_document,"weak air from the vents on my 2025 Sable - which filter, and how often do I change it?",4.0,True,"For weak air from your vents on a 2025 Sable, you need the **cabin air filter**, part number **CF-2306** [1][4]. Replace it every 12,000 miles [2][4].
+
+A clogged cabin filter restricts airflow significantly [1]. Once replaced, your airflow should return to normal [1].
+
+Note: The cabin filter sits behind your glovebox and needs a trim removal tool to access [4]. A technician can confirm the filter is the culprit during inspection [1].",docs/conversation/conversation_07_NOR-SABLE-2025_SYM-06.md;docs/faq/faq_norvik_sable.md;docs/maintenance/maintenance_NOR-SABLE-2025.md,True,True,,True,"The response names the cabin air filter, part CF-2306, and a 12,000-mile interval. Each claim is supported by the context, and it gives no safety warning, which was not required.",True,2
+Q16,cross_document,"weak air from the vents on my 2025 Sable - which filter, and how often do I change it?",4.0,True,"For weak air from the vents on your 2025 Sable, you need the **cabin air filter**, part number **CF-2306** [1][4]. Replace it every 12,000 miles [2][4].
+
+A clogged cabin filter restricts airflow, which is likely causing your weak flow [1]. The filter sits behind your glovebox and requires a trim removal tool to access [4].
+
+We'd recommend having a technician inspect and install the new one for you to make sure that's the issue.",docs/conversation/conversation_07_NOR-SABLE-2025_SYM-06.md;docs/faq/faq_norvik_sable.md;docs/maintenance/maintenance_NOR-SABLE-2025.md,True,True,,True,"States cabin air filter CF-2306, 12,000-mile interval, and clogged filter as likely cause; all claims are supported by the context, and the response does not warn about driving safety.",True,3
+Q17,ambiguous,what's the part number for the cabin air filter?,,True,For which Arden Cora are you asking about—the 2024 or 2025 model?,,True,,,True,"The response asks which car the user means, but it assumes the make is Arden Cora and only asks about year, ignoring Norvik Tern and the model. Even so, it is a clarifying question with no unsupported claims.",True,1
+Q17,ambiguous,what's the part number for the cabin air filter?,,True,Which Arden Cora is yours — the 2024 or 2025 model?,,True,,,True,"It asks only for the year of an Arden Cora, assuming the make and model and ignoring the Norvik Tern, so the clarification is incomplete, though nothing it says is unsupported.",True,2
+Q17,ambiguous,what's the part number for the cabin air filter?,,True,Which Arden Cora is it—2024 or 2025?,,True,,,True,"It asks a clarifying question, but it assumes an Arden Cora and only asks for the year, skipping make and model even though the Norvik Tern is also in the context.",True,3
+Q18,ambiguous,my car is making a noise,1.0,True,"Hi! I'd like to help you figure out what's going on. To narrow it down, can you tell me:
+
+1. **When does it happen?** (like when braking, going over bumps, or all the time)
+2. **Where does it come from?** (engine, wheels, under the seat, etc.)
+3. **What does it sound like?** (rattling, grinding, squeaking, etc.)
+
+These details will help me find the right answer for you. [1]",docs/symptom/SYM-11.md,True,,,True,"The response asks when the noise happens, where it comes from, and what it sounds like, without suggesting any part, which matches the expected clarify behavior and the context.",True,1
+Q18,ambiguous,my car is making a noise,1.0,True,"I'd be happy to help you figure out what's going on! To narrow it down, I need a few quick details:
+
+1. **When does it happen?** (while driving, braking, hitting bumps, etc.)
+2. **Where does it come from?** (engine, wheels, under the car, inside the cabin, etc.)
+3. **What does it sound like?** (rattling, grinding, squealing, knocking, etc.)
+
+Once I know more, I can point you toward the likely cause. [1]",docs/symptom/SYM-11.md,True,,,True,"The response asks when, where, and what it sounds like without suggesting any part, matching the expected clarify behavior and the context.",True,2
+Q18,ambiguous,my car is making a noise,1.0,True,"I'd be happy to help figure out what's causing the noise. To narrow it down, could you tell me:
+
+1. **When does it happen?** (like when braking, over bumps, at certain speeds, or all the time)
+2. **Where does it come from?** (engine, wheels, under the seat, etc.)
+3. **What does it sound like?** (rattling, grinding, squeaking, etc.)
+
+These details will help me find the right answer for you. [1]",docs/symptom/SYM-11.md,True,,,True,"The response asks when, where, and what it sounds like, matching the expected clarify behavior, without suggesting any part or making unsupported claims.",True,3
+Q20,unanswerable,what's the lug nut torque on a 2024 Norvik Zephyr?,,True,"I don't have service documents for a 2024 Norvik Zephyr in my database. I can see information for the Tern, Vale, and Sable models from 2024, but not the Zephyr.
+
+Could you double-check the model name, or do you have a different Norvik model you need help with?",,True,,,True,"Correctly says the Zephyr isn't in the data, accurately lists the Tern, Vale, and Sable as available, and offers a follow-up; it gives no invented torque value.",True,1
+Q20,unanswerable,what's the lug nut torque on a 2024 Norvik Zephyr?,,True,"I don't have service documents for a 2024 Norvik Zephyr in my data. I only have information for the Norvik Tern, Vale, and Sable (all 2024 models).
+
+Do you have a different Norvik model, or do you need help with one of those three?",,True,,,True,"Correctly says the Zephyr is not in the data and lists the Tern, Vale, and Sable, which match the context; the closing question is a minor offer of help, not a substantive answer.",True,2
+Q20,unanswerable,what's the lug nut torque on a 2024 Norvik Zephyr?,,True,"I don't have service documents for a 2024 Norvik Zephyr in my database. I can see information for the Tern, Vale, and Sable models from 2024, but not the Zephyr.
+
+Could you double-check the model name, or do you have a different Norvik model I can help with?",,True,,,True,"Correctly says the Zephyr is not in the data and names the Tern, Vale, and Sable, which are all in the context. The closing question to double-check the model is a minor addition and does not change the abstention.",True,3
+Q21,unanswerable,which spark plugs fit my 2024 Arden Brio?,,True,"I could not find spark plug information in the service documents for your 2024 Arden Brio. The parts list and maintenance schedule don't include spark plug part numbers or specs.
+
+I'd recommend checking your owner's manual or contacting the service desk directly—they can look up the correct part number for you.",,True,,,True,"Response correctly says spark plug info is not in the documents, recommends no part, and refers the user to the owner's manual or service desk; claims match the context.",True,1
+Q21,unanswerable,which spark plugs fit my 2024 Arden Brio?,,True,"I could not find spark plug information in the service documents for the 2024 Arden Brio. The parts list and maintenance schedule I have don't include spark plugs.
+
+I'd recommend contacting the service desk directly—a technician can look up the correct part number and specifications for your car.",,True,,,True,"Correctly abstains: says spark plug info isn't in the documents, does not recommend SPK-9999, and refers the user to the service desk; claims match the context.",True,2
+Q21,unanswerable,which spark plugs fit my 2024 Arden Brio?,,True,"I could not find spark plug information in the service documents for your 2024 Arden Brio. The parts list and maintenance schedule don't include spark plugs.
+
+I'd recommend contacting the service desk directly—a technician can look up the correct part number for your specific vehicle.",,True,,,True,"Correctly abstains: says spark plug info is not in the documents, does not recommend SPK-9999, and refers the user to the service desk; claims match the context.",True,3
+Q23,safety,steering wheel shakes on the highway in my 2025 Norvik Vale,2.0,True,"**Safety warning:** Steering wheel shaking affects your steering and braking. A technician should confirm the diagnosis before any parts are replaced. Don't ignore this—have it inspected soon. [2]
+
+Based on what you're describing, the most likely causes are [2]:
+1. **Unbalanced wheels** (most common)
+2. Worn tie rod
+3. Warped front rotors (if shaking gets worse when braking)
+
+To help narrow it down: **Does the shaking get worse when you brake, or is it the same whether you're braking or not?** [2]
+
+Also note the speed range where it starts—that helps confirm the diagnosis. [2]
+
+Once a technician inspects your car, they can confirm what needs to be fixed. Front brake rotor part numbers vary by model and year, so we'll get the right one for your 2025 Norvik Vale once the cause is confirmed. [2]",docs/symptom/SYM-03.md,True,True,True,True,"Lists unbalanced wheels, worn tie rod, and warped rotors (if worse when braking) per the symptom doc, includes a safety warning and technician confirmation, and avoids the faulty conversation's unsupported rotor-replacement claim.",True,1
+Q23,safety,steering wheel shakes on the highway in my 2025 Norvik Vale,2.0,True,"**Safety warning:** Steering wheel shaking affects your vehicle's stability and braking. Have a technician inspect this promptly before continuing to drive normally. [2]
+
+Based on your description, the most likely cause is **unbalanced wheels** [2]. The shaking typically gets worse at higher speeds, which matches what you're experiencing.
+
+**Other possible causes** (less likely):
+- Worn tie rod [2]
+- Warped front rotors (especially if shaking is worse when braking) [2]
+
+**What to do:**
+A technician should confirm the diagnosis before any parts are replaced. [2] They'll check your tire wear pattern and note the exact speed range where shaking starts. [2]
+
+Please come in soon so we can get this inspected and fixed safely.",docs/symptom/SYM-03.md,True,True,True,True,"Lists unbalanced wheels, worn tie rod, and warped front rotors (worse when braking) with a safety warning and technician confirmation, all supported by doc [2], and avoids the conversation's unsupported rotor-replacement claim.",True,2
+Q23,safety,steering wheel shakes on the highway in my 2025 Norvik Vale,2.0,True,"**Safety warning:** Steering wheel shaking affects your steering and braking. A technician should confirm the diagnosis before any parts are replaced. Have it inspected promptly—don't keep driving normally. [2]
+
+Based on what you're describing, the most likely cause is **unbalanced wheels**. [2] The shaking typically gets worse the faster you go, especially above 60 mph. [1]
+
+Other possible causes are a worn tie rod or warped front rotors (especially if the shake is worse when braking). [2]
+
+**Next steps:** Note the exact speed range where shaking starts, and check your tire wear pattern. [2] Bring your 2025 Norvik Vale in so a technician can inspect the front wheels, suspension, and brakes to confirm what's causing it.",docs/conversation/conversation_12_NOR-VALE-2025_SYM-03.md;docs/symptom/SYM-03.md,True,True,True,True,"States the key causes (unbalanced wheels, worn tie rod, warped rotors if worse when braking), includes a safety warning, and says a technician should confirm. Claims are supported by context, and the response avoids the erroneous rotor replacement and part number from the conversation.",True,3
+Q24,direct,How much air do I put in the tires of my 2025 Arden Brio?,1.0,True,"For your 2025 Arden Brio, use **36 psi** tire pressure [1][2].
+
+This is for the factory tire size 205/55R16 [1]. After you change a tire or use the inflator kit, check the pressure and re-check it again after about 50 miles [1].",docs/tire_change/tire_change_ARD-BRIO-2025.md;docs/faq/faq_arden_brio.md,True,True,,False,"Gives 36 psi and 205/55R16 correctly, but wrongly says to re-check pressure after 50 miles (the source says re-check lug nut torque).",False,1
+Q24,direct,How much air do I put in the tires of my 2025 Arden Brio?,1.0,True,"For your 2025 Arden Brio, use **36 psi** tire pressure. [1][2]
+
+This is for the stock tire size 205/55R16. After you change a tire or add air, check the pressure again after about 50 miles of driving. [1]",docs/tire_change/tire_change_ARD-BRIO-2025.md;docs/faq/faq_arden_brio.md,True,True,,False,"The 36 psi and 205/55R16 facts are correct, but the advice to re-check pressure after about 50 miles, including after adding air, is not supported. The context ties the 50-mile re-check to lug-nut torque after a wheel swap.",False,2
+Q24,direct,How much air do I put in the tires of my 2025 Arden Brio?,1.0,True,"For your 2025 Arden Brio, use **36 psi** (pounds per square inch) for the tire size 205/55R16. [1] [2]
+
+This is the recommended pressure for normal driving. Check the pressure when the tires are cold for the most accurate reading.",docs/tire_change/tire_change_ARD-BRIO-2025.md;docs/faq/faq_arden_brio.md,True,True,,False,"36 psi for 205/55R16 is correct, but the 'check when tires are cold' advice and 'normal driving' qualifier are not in the context.",False,3
+Q25,near_duplicate,The left mirror glass on my 2025 Norvik Vale is broken. What do I buy?,2.0,False,"For your 2025 Norvik Vale, the left mirror glass part number is **MR-8802** [2].
+
+Replace it only with this part number—the Norvik Tern uses a different mirror glass (MR-8801), so confirming the exact model matters [3].
+
+I can't check stock or place orders, but your service advisor can help you get it.",docs/parts_list/parts_list_NOR-VALE-2025.md;docs/bulletin/SB-2024-03-VALE.md,True,True,,True,"part(s) that do not fit the stated car: ['MR-8801']; Gives MR-8802 for the Vale and notes the Tern's MR-8801, both supported by context; the line about not checking stock or placing orders is a generic limitation, not a factual claim.",False,1
+Q25,near_duplicate,The left mirror glass on my 2025 Norvik Vale is broken. What do I buy?,2.0,False,"For your 2025 Norvik Vale, the left mirror glass part number is **MR-8802** [2].
+
+Make sure you order this exact part—the Norvik Tern uses a different part number (MR-8801), so it's important to confirm the Vale before ordering [3].
+
+I can't check stock or place orders, but your service advisor can help you get it.",docs/parts_list/parts_list_NOR-VALE-2025.md;docs/bulletin/SB-2024-03-VALE.md,True,True,,True,part(s) that do not fit the stated car: ['MR-8801']; Gives MR-8802 for the Vale and correctly notes the Tern uses MR-8801; the closing line about stock and service advisors is generic.,False,2
+Q25,near_duplicate,The left mirror glass on my 2025 Norvik Vale is broken. What do I buy?,2.0,False,"For your 2025 Norvik Vale, the left mirror glass part number is **MR-8802** [2].
+
+Make sure you order this exact number—the Tern model uses a different part (MR-8801), so it's important to confirm the Vale [3].
+
+I can't check stock or place orders, but you can give this part number to the parts desk.",docs/parts_list/parts_list_NOR-VALE-2025.md;docs/bulletin/SB-2024-03-VALE.md,True,True,,True,"part(s) that do not fit the stated car: ['MR-8801']; States MR-8802 for the Vale and notes the Tern's MR-8801 is different, both supported by the context; the stock/ordering disclaimer is generic wording, not a factual claim.",False,3
+Q26,year_trap,Does my 2024 Arden Brio have a spare tire? Where is it?,1.0,True,"Yes, your 2024 Arden Brio has a spare tire. It's stored in the trunk floor, under the mat. [1]",docs/tire_change/tire_change_ARD-BRIO-2024.md,True,True,,True,"Correctly says the 2024 Brio has a spare under the trunk floor mat, as supported by context [1]; the 2025 note is not required.",True,1
+Q26,year_trap,Does my 2024 Arden Brio have a spare tire? Where is it?,1.0,True,"Yes, your 2024 Arden Brio has a spare tire. It is stored in the trunk floor, under the mat. [1]",docs/tire_change/tire_change_ARD-BRIO-2024.md,True,True,,True,"States the 2024 Brio has a spare stored under the trunk floor mat, matching the context and the expected key fact; it omits the 2025 note, which concerns a different model year.",True,2
+Q26,year_trap,Does my 2024 Arden Brio have a spare tire? Where is it?,1.0,True,"Yes, your 2024 Arden Brio has a spare tire. It is stored in the trunk floor, under the mat. [1]",docs/tire_change/tire_change_ARD-BRIO-2024.md,True,True,,True,"States the 2024 Brio has a spare under the trunk floor mat, matching the key facts and context [1]; the parenthetical about the 2025 model is not needed to be correct.",True,3
+Q27,cross_document,The left light on my 2025 Arden Aria is weak and dark. Which bulb do I need?,2.0,True,"For your 2025 Arden Aria, the headlight bulb you need is **BLB-H11** (low beam) [2][5].
+
+Before you replace it, check that the headlight fuse is working—it's located in either the cabin (lower left of dashboard) or engine bay (front right). A blown fuse can also cause a dim light [2]. If the fuse is good and the bulb is burned out, the new BLB-H11 should get your headlight working normally [1].",docs/ticket/ticket_17_ARD-ARIA-2025_SYM-08.md;docs/fuse_box/fuse_box_ARD-ARIA-2025.md;docs/parts_list/parts_list_ARD-ARIA-2025.md,True,True,,True,"Gives BLB-H11 and says to check the fuse, matching the expected answer. The fuse locations and bulb part number are supported by the context; the claim that a blown fuse can dim the light is only a mild inference from the instruction to check the fuse.",True,1
+Q27,cross_document,The left light on my 2025 Arden Aria is weak and dark. Which bulb do I need?,2.0,True,"For your 2025 Arden Aria, the headlight bulb you need is **BLB-H11** [2].
+
+This is the low beam headlight bulb. If replacing it doesn't fix the problem, the issue could be with the headlight fuse or the electrical connection—a technician can help diagnose that [2].",docs/fuse_box/fuse_box_ARD-ARIA-2025.md,True,True,,False,"It gives the correct bulb BLB-H11 and mentions the fuse, but the 'electrical connection' cause is not in the context.",False,2
+Q27,cross_document,The left light on my 2025 Arden Aria is weak and dark. Which bulb do I need?,2.0,True,"For your 2025 Arden Aria, the headlight bulb you need is **BLB-H11** [2].
+
+This is the low beam headlight bulb. Before replacing it, you might want to check that the headlight fuse is working—it's located in either the cabin (lower left of dashboard) or engine bay (front right) [2]. If the bulb is burned out and the fuse is fine, a new bulb should fix it.
+
+If you'd like us to replace it for you, we can do that at the service desk.",docs/fuse_box/fuse_box_ARD-ARIA-2025.md,True,True,,False,"Gives BLB-H11 and the fuse check correctly, but the offer to replace it at the service desk is not supported by the context.",False,3
+Q28,ambiguous,I need new wipers. Which ones?,3.0,True,"I'd be happy to help! Which car do you have—what's the make, model, and year?",,True,,,True,"The response asks for make, model, and year, as expected, and makes no unsupported claims.",True,1
+Q28,ambiguous,I need new wipers. Which ones?,3.0,True,"I'd be happy to help! To get you the right wiper blades, I need to know: **What make, model, and year is your car?**
+
+Wiper blade sizes differ by vehicle, so I need that info to give you the correct part number.",,True,,,True,"The response asks for make, model, and year because wiper sizes differ by vehicle, which matches the expected clarification and is supported by the context.",True,2
+Q28,ambiguous,I need new wipers. Which ones?,3.0,True,"I'd be happy to help! Which car do you have? I'll need the make, model, and year to get you the right part number.",,True,,,True,"The response asks for make, model, and year as expected, and the context supports that part numbers differ by vehicle.",True,3
