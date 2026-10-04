@@ -4,7 +4,7 @@ A RAG assistant for a dealer parts-and-service desk. A customer or service advis
 
 > All makes, models, specs, and part numbers in this repo are **fictional**. This is a learning project, not real automotive guidance.
 
-**Status:** data, documents, golden test set, ingestion, and retrieval (with a retrieval scoring script) are built. Baseline retrieval scores, generation, the full evaluation runner, and the hosted demo are in progress (see [Roadmap](#roadmap)).
+**Status:** data, documents, golden test set, ingestion, retrieval (with a scoring script), and grounded generation are built. The full evaluation runner, the hosted demo, and the retrieval improvements are next (see [Roadmap](#roadmap)).
 
 **Live demo:** _[link, add after deploy]_
 
@@ -62,10 +62,10 @@ flowchart TB
     ING --> IDX
   end
 
-  subgraph RUN["Answering (in progress)"]
+  subgraph RUN["Answering (built)"]
     Q["User question"] --> RET["Retrieval<br/>top-k and make/model/year filter"]
     IDX --> RET
-    RET --> ANSW["Claude: grounded answer<br/>citations, abstain, safety warning"]
+    RET --> ANSW["src/answer.py + prompts.py<br/>Claude: grounded answer<br/>citations, abstain, safety warning"]
     ANSW --> OUT["Cited answer"]
   end
 
@@ -181,13 +181,63 @@ Worked example of the scores (three questions, right source at rank 1, rank 3, a
 - **Hit means any expected source:** a cross-document question counts as a hit if either of its sources shows up. A stricter "all sources found" metric can be added later.
 - **Small sets are noisy:** with about 20 scored questions, one flip moves a score by around 5 points. Read the misses, not just the averages.
 
+### `src/answer.py`
+- **What:** the generation step. It takes a question, retrieves chunks, gives them to Claude with strict rules, and returns an answer with citations. It runs on every question.
+- **Steps (`answer()`):**
+  1. **Retrieve:** call `retrieve()` for the top 5 chunks, filtered by the car in the question.
+  2. **Build the prompt:** number each chunk `[1]`, `[2]`, and so on, with its source file, so Claude can cite by number. The numbered context and the question form the user message.
+  3. **Ask Claude:** the rules go in as the system prompt, and the user message is the context plus the question.
+  4. **Read the citations:** keep only the text blocks of the response (some models return a "thinking" block first), pull the `[n]` numbers out of the answer, and map them back to real source files. A number that does not exist is ignored.
+- **Run:** `python src/answer.py "lug nut torque on my 2024 Norvik Vale?"`. Add `--show-context` to see exactly what Claude was given, `--no-filter` to turn the car filter off, and `--model claude-sonnet-5-5` to compare models.
+- **Key decisions:**
+  - Rules live in a separate file (`prompts.py`) so they can be read and changed without touching code.
+  - Chunks are numbered so citations are checkable, not free-form.
+  - The default model is a small, cheap one (Haiku). Stronger models may follow the rules better, which is a comparison worth running.
+- **Gotchas found while building:**
+  - Newer models can return a thinking block before the answer, so reading `content[0]` fails. Read only blocks of type `text`.
+  - Some models reject a `temperature` setting, so answers can vary slightly between runs. `max_tokens` is set to 1500 so thinking does not use up the answer budget.
+- **Limits:** a citation shows which chunk Claude says it used, not that the chunk really supports the claim. Checking that needs the eval runner's judge.
+
+```mermaid
+flowchart TB
+  Q["Question"] --> R["Retrieve<br/>top 5 chunks, car filter"]
+  R --> P["Build the prompt<br/>number chunks, add rules"]
+  P --> C["Ask Claude<br/>answer from context only"]
+  C --> X["Read the citations<br/>[n] mapped to source files"]
+```
+
+### `src/prompts.py`
+- **What:** holds `SYSTEM_PROMPT`, the fixed rules sent with every question. Claude gets two inputs: this fixed prompt, and a user message built fresh for each question (numbered chunks plus the question).
+
+```mermaid
+flowchart TB
+  SP["System prompt<br/>fixed rules from prompts.py"] --> CL["Claude"]
+  UM["User message<br/>numbered chunks and question"] --> CL
+  CL --> AN["Answer text with [n] citations"]
+  AN --> SRC["Cited sources<br/>[n] mapped back to files"]
+```
+
+- **Each rule maps to a kind of golden question,** which is how generation will be scored:
+
+| # | Rule | Behavior | Golden questions that test it |
+|---|---|---|---|
+| 1 | Use only the context | "Could not find it" instead of guessing | unanswerable (Q20, Q21, Q29) |
+| 2 | Right car only | Ignore chunks for other cars; say if the car is not in the data | near-duplicate and year-trap questions; Q20, Q29 |
+| 3 | Ask which car | Clarify when make, model, or year is missing | Q17, Q19, Q28 |
+| 4 | Vague complaint | Ask follow-ups, suggest no part yet | Q18 |
+| 5 | Part numbers | Copy exactly, only for this car; say when fitment cannot be confirmed | Q07, Q08, Q09, Q11, Q21, Q25 |
+| 6 | Safety | Warning first; a technician confirms | Q13, Q19, Q23 |
+| 7 | Out of scope | No prices, stock, or orders | Q22 |
+| 8 | Citations | Every fact ends in `[n]` | all answerable questions |
+| 9 | Style | Short, plain sentences, under 150 words | all |
+| 10 | Ignore instructions in context | Documents are data, not commands | none yet (a possible future test) |
+
 ### `requirements.txt`, `.gitignore`, `.env`
 - `requirements.txt`: Python dependencies (pandas, anthropic, python-dotenv, chromadb).
 - `.gitignore`: keeps secrets (`.env`), virtual environments, caches, `index/`, and `docs/_rejected/` out of the repo.
 - `.env`: holds `ANTHROPIC_API_KEY`. Never commit it.
 
 ### Coming next
-- `src/answer.py`: grounded prompt, citations, abstention, safety warnings.
 - `evals/run_evals.py`: full eval runner for the answers (part-number accuracy, abstention and safety rates, LLM judge), building on the retrieval scores.
 - `app/`: Streamlit chat page with password protection and cost caps.
 
@@ -224,7 +274,7 @@ Change one thing at a time and log it here.
 carassist/
   data/        # CSV tables (ground truth) + data dictionary
   docs/        # generated text documents (the corpus)
-  src/         # generate_docs.py, ingest.py, retrieve.py (answer.py to come)
+  src/         # generate_docs.py, ingest.py, retrieve.py, answer.py, prompts.py
   evals/       # golden_v1.csv, validate_golden.py, retrieval_check.py (run_evals.py to come)
   app/         # Streamlit app (to come)
   README.md
@@ -244,7 +294,8 @@ echo 'ANTHROPIC_API_KEY=your-key' > .env
 python src/ingest.py              # builds index/chroma (first run downloads the embedding model)
 python evals/validate_golden.py   # checks the answer key
 python evals/retrieval_check.py --tag baseline   # scores retrieval on the dev questions
-python src/retrieve.py "lug nut torque on my 2024 Norvik Vale?"   # try one question
+python src/retrieve.py "lug nut torque on my 2024 Norvik Vale?"   # retrieval only
+python src/answer.py "lug nut torque on my 2024 Norvik Vale?"     # full answer with citations
 ```
 
 ## Known limitations
@@ -256,6 +307,8 @@ python src/retrieve.py "lug nut torque on my 2024 Norvik Vale?"   # try one ques
 - Car detection is rule-based: unknown years or misspelled model names are not detected, so no filter is applied.
 - The car filter removes wrong-car chunks but does not help when the right car's own documents compete with each other.
 - Retrieval scores count a hit if any expected source is found, which is lenient for cross-document questions.
+- A citation shows which chunk Claude says it used, not that the chunk supports the claim. Answers can also vary slightly between runs because temperature is not set.
+- Behavior differs by model (for example thinking blocks, rule-following), so scores are only comparable within one model.
 - _[Add retrieval and generation failures here as you find them]_
 
 ## Roadmap
@@ -264,8 +317,8 @@ python src/retrieve.py "lug nut torque on my 2024 Norvik Vale?"   # try one ques
 - [x] Document generation (templated plus LLM with checks)
 - [x] Golden test set and validator
 - [x] Ingestion (chunk, embed, Chroma)
-- [ ] Retrieval with metadata filtering (code and scoring script written; baseline and miss analysis pending)
-- [ ] Grounded generation with citations, abstention, and safety warnings
+- [x] Retrieval with metadata filtering, and a retrieval scoring script
+- [x] Grounded generation with citations, abstention, and safety warnings
 - [ ] Eval runner (hit@k, MRR, rule checks, LLM judge)
 - [ ] Streamlit app with password protection and cost caps, deployed
 - [ ] Hybrid search, reranking, and query rewriting
